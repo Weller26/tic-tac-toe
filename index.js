@@ -11,6 +11,7 @@ let field = {
     current: [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]],
     elemsCount: 0
 };
+let gameIsStop = false;
 
 function startGame () {
     renderGrid(3);
@@ -34,43 +35,79 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if (field['current'][row][col] !== EMPTY || gameIsStop) {
+        return;
+    }
     let symbol = field['elemsCount'] % 2 === 0 ? CROSS : ZERO;
     renderSymbolInCell(symbol, row, col);
 
     field['elemsCount']++;
     field['current'][row][col] = symbol;
 
-    if (isWinner(field) == 1) {
+    if (isWinner() === 1) {
         alert("Победили крестики");
+        gameIsStop = true;
+        return;
     }
-    if (isWinner(field) == -1) {
+    else if (isWinner() === -1) {
         alert("Победили нолики");
+        gameIsStop = true;
+        return;
     }
-    if (isWinner(field) == 0) {
-        alert("Победила дружба!");
+    else if (field['elemsCount'] === 9) {
+        alert('Ничья')
+        gameIsStop = true;
+        return;
     }
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    return;
 }
 
 
-function isWinner(field) {
-    let x = 0;
-    let o = 0;
+function isWinner() {
     for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                for (let k = 0; k < 3; j++){
-                    if (field[i][j][k] == "X") x++;
-                    if (field[i][j][k] == "O") o++;
-                }
-            }
+        let x = 0;
+        let o = 0;
+        for (let j = 0; j < 3; j++) {
+            if (field['current'][i][j] === CROSS) x++;
+            if (field['current'][i][j] === ZERO) o++;
+        }
+        if (x === 3) {
+            return 1
+        }
+        else if (o === 3) {
+            return -1
+        }
     }
-    if (x > o){return 1}
-    if (o > x){return -1}
-    else {return 0}
+    for (let i = 0; i < 3; i++) {
+        let xx = 0;
+        let oo = 0;
+        for (let j = 0; j < 3; j++) {
+            if (field['current'][j][i] === CROSS) xx++;
+            if (field['current'][j][i] === ZERO) oo++;
+        }
+        if (xx === 3) {
+            return 1
+        }
+        else if (oo === 3) {
+            return -1
+        }
+    }
+
+    let xxx = 0;
+    let ooo = 0
+    for (let i = 0; i < 3; i++) {
+        if (field['current'][i][i] === CROSS) xxx++;
+        if (field['current'][i][i] === ZERO) ooo++;
+        if (xxx === 3) {
+            return 1
+        }
+        else if (ooo === 3) {
+            return -1
+        }
+    }
+    if (field['current'][0][2] == CROSS && field['current'][1][1] == CROSS && field['current'][2][0] == CROSS) {return 1}
+    if (field['current'][0][2] == ZERO && field['current'][1][1] == ZERO && field['current'][2][0] == ZERO) {return -1}
+    return;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -99,6 +136,7 @@ function resetClickHandler () {
             renderSymbolInCell(EMPTY, i, j);
         }
     }
+    gameIsStop = false;
 }
 
 
