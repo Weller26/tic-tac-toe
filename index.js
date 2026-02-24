@@ -41,17 +41,38 @@ function cellClickHandler (row, col, field) {
 
     console.log(field)
 
+    if (isWinner(field) == 1) {
+        alert("Победили крестики");
+    }
+    if (isWinner(field) == -1) {
+        alert("Победили нолики");
+    }
+    if (isWinner(field) == 0) {
+        alert("Победила дружба!");
+    }
+
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
 }
 
-// function isWinner(field) {
-//     for (let i = 0; i < 3; i++) {
-//
-//     }
-// }
+
+function isWinner(field) {
+    let x = 0;
+    let o = 0;
+    for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                for (let k = 0; k < 3; j++){
+                    if (field[i][j][k] == "X") x++;
+                    if (field[i][j][k] == "O") o++;
+                }
+            }
+    }
+    if (x > o){return 1}
+    if (o > x){return -1}
+    else {return 0}
+}
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
