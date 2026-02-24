@@ -7,11 +7,14 @@ const container = document.getElementById('fieldWrapper');
 startGame();
 addResetListener();
 
+let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
+let fieldElemsCount = 0;
+
 function startGame () {
     renderGrid(3);
 }
 
-function renderGrid (dimension) {
+function renderGrid (dimension, field) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -19,22 +22,36 @@ function renderGrid (dimension) {
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
-            cell.addEventListener('click', () => cellClickHandler(i, j));
+            cell.addEventListener('click', () => cellClickHandler(i, j, field));
             row.appendChild(cell);
         }
         container.appendChild(row);
     }
 }
 
-function cellClickHandler (row, col) {
+function cellClickHandler (row, col, field) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    let symbol = fieldElemsCount % 2 === 0 ? CROSS : ZERO;
+    renderSymbolInCell(symbol, row, col);
+
+    fieldElemsCount++;
+
+    field[row][col] = symbol;
+
+    console.log(field)
 
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
 }
+
+// function isWinner(field) {
+//     for (let i = 0; i < 3; i++) {
+//
+//     }
+// }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
