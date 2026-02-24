@@ -7,14 +7,16 @@ const container = document.getElementById('fieldWrapper');
 startGame();
 addResetListener();
 
-let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
-let fieldElemsCount = 0;
+let field = {
+    current: [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]],
+    elemsCount: 0
+};
 
 function startGame () {
     renderGrid(3);
 }
 
-function renderGrid (dimension, field) {
+function renderGrid (dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -22,24 +24,21 @@ function renderGrid (dimension, field) {
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
-            cell.addEventListener('click', () => cellClickHandler(i, j, field));
+            cell.addEventListener('click', () => cellClickHandler(i, j));
             row.appendChild(cell);
         }
         container.appendChild(row);
     }
 }
 
-function cellClickHandler (row, col, field) {
+function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    let symbol = fieldElemsCount % 2 === 0 ? CROSS : ZERO;
+    let symbol = field['elemsCount'] % 2 === 0 ? CROSS : ZERO;
     renderSymbolInCell(symbol, row, col);
 
-    fieldElemsCount++;
-
-    field[row][col] = symbol;
-
-    console.log(field)
+    field['elemsCount']++;
+    field['current'][row][col] = symbol;
 
 
     /* Пользоваться методом для размещения символа в клетке так:
@@ -72,6 +71,13 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    field['current'] = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+    field['elemsCount'] = 0;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            renderSymbolInCell(EMPTY, i, j);
+        }
+    }
 }
 
 
